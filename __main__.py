@@ -18,14 +18,17 @@ deployment = Deployment(
 service = Service(
     "nginx",
     spec={
+        "type": "LoadBalancer", 
         "ports": [
             {
                 "port": 80,
                 "targetPort": 80,
                 "protocol": "TCP"
             }
-        ]
+        ],
+        "selector": app_labels
     }
 )
 
 pulumi.export("name", deployment.metadata["name"])
+pulumi.export("frontendIp", service.status["load_balancer"]["ingress"][0]["hostname"])
